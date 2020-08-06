@@ -1,37 +1,55 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-
+import Axios from "axios";
+  
 const ContactForm = () => {
   const [data, setData] = useState();
   const { register, errors, handleSubmit } = useForm({
     mode: "onBlur",
   });
   const onSubmit = (data) => {
-    setData(data);
+    // setData(data);
+    console.log(data)
+    const newContact = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      message: data.message
+    }
+    Axios.post('https://reqres.in/api/users', newContact)
+      .then(res => {
+        console.log(res)
+        
+      })
+      .catch(err => {
+        console.log(err)
+      })
   };
 
   return (
     <div className="App">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label htmlFor="firstName">First Name*</label>
+          <label htmlFor="firstName">First Name*
           <input
             name="firstName"
             placeholder="Edd"
-            ref={register({ required: true, maxLength: 3 })}
+            ref={register({ required: true, maxLength: 15 })}
           />
+          </label>
           {errors.firstName && (
             <p>Looks like there was an error: {errors.firstName.type}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="lastName">Last Name*</label>
+          <label htmlFor="lastName">Last Name*
           <input
             name="lastName"
             placeholder="Burke"
             ref={register({ required: true })}
           />
+          </label>
           {errors.lastName && (
             <p>Looks like there was an error: {errors.lastName.type}</p>
           )}
@@ -40,15 +58,17 @@ const ContactForm = () => {
         <div>
           <label htmlFor="email" placeholder="bluebill1049@hotmail.com">
             Email*
-          </label>
+          
           <input name="email" ref={register({ required: true })} />
+          </label>
           {errors.email && (
             <p>Looks like there was an error: {errors.email.type}</p>
           )}
         </div>
         <div>
-          <label htmlFor="message">Message</label>
+          <label htmlFor="message">Message
           <textarea name="message" ref={register({ required: false })} />
+          </label>
         </div>
         {data && (
           <pre style={{ textAlign: "left", color: "white" }}>
